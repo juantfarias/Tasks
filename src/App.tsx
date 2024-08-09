@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef} from 'react'
 import './App.css'
 
 export default function App() {
@@ -10,6 +10,13 @@ export default function App() {
     enable: false,
     task: ''
   })
+  useEffect(() => {
+    const tarefasSalva = localStorage.getItem("@cursoreact")
+
+    if(tarefasSalva){
+      setTasks(JSON.parse(tarefasSalva));
+    }
+  }, [])
 
   function handleRegister(){
     if(!input){
@@ -24,6 +31,7 @@ export default function App() {
 
     setTasks(tarefas => [...tarefas, input])
     setInput('')
+    localStorage.setItem('@cursoreact', JSON.stringify([...tasks, input]))
   }
 
   function handleSaveEdit(){
@@ -39,11 +47,14 @@ export default function App() {
       task: ''
     })
     setInput('')
+    localStorage.setItem('@cursoreact', JSON.stringify(allTasks))
   }
 
   function handleDelete(item: string){
     const removeTask = tasks.filter( task => task !== item)
     setTasks(removeTask)
+
+    localStorage.setItem("@cursoreact", JSON.stringify(removeTask))
   }
 
   function handleEdit(item: string){
@@ -55,25 +66,26 @@ export default function App() {
   }
 
   return (
-      <div>
-        <h1>Lista de tarefas</h1>
-        <input 
-          placeholder='Digite o nome da tarefa...' 
-          value={input}
-          onChange={ (e) => setInput(e.target.value)}
-        />
-
-        <button onClick={handleRegister}>{editTask.enable ? 'Atualizar tarefa' : 'Adicionar tarefa'}</button>
-        <hr />
-
-        {tasks.map((item, index) => (
-          <section key={index}>
-            <span>{item}</span>
-            <button onClick={ () => handleEdit(item)}>Editar</button>
-            <button onClick={ () => handleDelete(item) }>Excluir</button>
-          </section>
-        ))}
-      </div>
+      <main>
+        <header>
+          <p className='title'>Lista de tarefas</p>
+          <input type="text"
+            placeholder={'Digite o nome da tarefa...'}
+            value={input}
+            onChange={ (e) => setInput(e.target.value)}
+          />
+          <button onClick={handleRegister}>{editTask.enable ? 'Atualizar tarefa' : 'Adicionar tarefa'}</button>
+        </header>
+        <section className='tasks'>
+          {tasks.map((item, index) => (
+            <section key={index}>
+              <span>- {item}</span>
+              <button onClick={ () => handleEdit(item)}>Editar</button>
+              <button onClick={ () => handleDelete(item) }>Excluir</button>
+            </section>
+          ))}
+        </section>
+      </main>
   )
 }
 

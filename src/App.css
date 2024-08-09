@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #6482AD;
+  color: aliceblue;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.tasks{
+  margin-top: 40px;
+  font-size: 30px;
+  width: 700px;
+  min-height: 300px;
+  height: 100%;
+  background-color: #7FA1C3;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.tasks span{
+  padding: 20px;
+}
+
+.title {
+  font-size: 60px;
+  font-weight: 600;
+}
+
+header{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+header input{
+  outline: none;
+  border: none;
+  background-color: #6482AD;
+  width: 80%;
+  height: 50px;
+  padding-bottom: 20px;
+  color: aliceblue;
+  text-align: center;
+  font-size: 20px;
+}
+
+header button {
+  height: 40px;
+  width: 180px;
+  border-radius: 10px;
+  border: none;
+}
+
+.tasks button{
+  height: 30px;
+  width: 80px;
+  border-radius: 10px;
+  border: none;
+  margin: 10px;
+}
+
+input::placeholder{
+  font-size: 20px;
+  color: aliceblue;
+  text-align: center;
+}
+
+
+main{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
