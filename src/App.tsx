@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import './App.css'
 
 export default function App() {
 
+  const inputRef = useRef<HTMLInputElement>(null)
   const [input, setInput] = useState('');
   const [tasks, setTasks] = useState<string[]>([])
+  const firstRender = useRef(true);
 
   const [editTask, SetEditTask] = useState({
     enable: false,
@@ -18,21 +20,30 @@ export default function App() {
     }
   }, [])
 
-  function handleRegister(){
-    if(!input){
-      alert('Preencha o nome da sua tarefa!')
+  useEffect(() =>{
+    if(firstRender.current){
+      firstRender.current = false;
       return;
     }
+    localStorage.setItem('@cursoreact', JSON.stringify(tasks))
+  }, [tasks]);
 
-    if(editTask.enable){
-      handleSaveEdit();
-      return;
-    }
 
-    setTasks(tarefas => [...tarefas, input])
-    setInput('')
-    localStorage.setItem('@cursoreact', JSON.stringify([...tasks, input]))
-  }
+  const handleRegister = useCallback(() => {
+      if(!input){
+        alert('Preencha o nome da sua tarefa!')
+        return;
+      }
+  
+      if(editTask.enable){
+        handleSaveEdit();
+        return;
+      }
+  
+      setTasks(tarefas => [...tarefas, input])
+      setInput('')
+  }, [input, tasks])
+  
 
   function handleSaveEdit(){
     const findIndexTask = tasks.findIndex(task => task === editTask.task)
@@ -58,12 +69,19 @@ export default function App() {
   }
 
   function handleEdit(item: string){
+
+    inputRef.current?.focus();
+
     setInput(item)
     SetEditTask({
       enable: true,
       task: item
     })
-  }
+  } 
+
+  const totalTarefas = useMemo(() => {
+    return tasks.length
+  }, [tasks])
 
   return (
       <main>
@@ -73,8 +91,12 @@ export default function App() {
             placeholder={'Digite o nome da tarefa...'}
             value={input}
             onChange={ (e) => setInput(e.target.value)}
+            ref={inputRef}
           />
           <button onClick={handleRegister}>{editTask.enable ? 'Atualizar tarefa' : 'Adicionar tarefa'}</button>
+          <br />
+          <br />
+        <strong>Você tem {totalTarefas} tarefas!</strong>
         </header>
         <section className='tasks'>
           {tasks.map((item, index) => (
